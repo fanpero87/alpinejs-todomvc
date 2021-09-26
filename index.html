@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Alpinejs TodoMVC</title>
+		<link rel="stylesheet" href="node_modules/todomvc-common/base.css" />
+		<link rel="stylesheet" href="node_modules/todomvc-app-css/index.css" />
+		<link rel="stylesheet" href="css/app.css" />
+
+		<!-- Alpinejs -->
+		<script
+			defer
+			src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"
+		></script>
+	</head>
+	<body>
+		<section class="todoapp" x-data="todos()">
+			<header class="header">
+				<h1>todos</h1>
+				<input
+					x-on:keyup.enter="addTodo"
+					x-model="newTodo"
+					class="new-todo"
+					placeholder="What needs to be done?"
+					autofocus
+				/>
+			</header>
+
+			<section class="main" x-show="todos.length">
+				<input
+					x-model="allComplete"
+					x-on:click="toggleAllComplete"
+					id="toggle-all"
+					class="toggle-all"
+					type="checkbox"
+				/>
+				<label for="toggle-all">Mark all as complete</label>
+				<ul class="todo-list">
+					<template x-for="todo in filteredTodos" :key="todo.id">
+						<li
+							x-bind:class="{
+								editing: todo === editedTodo,
+								completed: todo.completed
+							}"
+						>
+							<div class="view">
+								<input
+									x-model="todo.completed"
+									x-on:click="toggleTodoCompletion(todo)"
+									class="toggle"
+									type="checkbox"
+								/>
+								<label
+									x-text="todo.body"
+									x-on:dblclick="editTodo(todo)"
+								></label>
+
+								<button x-on:click="deleteTodo(todo)" class="destroy"></button>
+							</div>
+							<input
+								x-model="todo.body"
+								x-on:keyup.enter="editComplete(todo)"
+								x-on:keyup.escape="cancelEdit(todo)"
+								class="edit"
+							/>
+						</li>
+					</template>
+				</ul>
+			</section>
+
+			<footer class="footer" x-show="todos.length">
+				<span class="todo-count">
+					<strong x-text="active.length"></strong>
+					<span x-text="active.length === 1 ? 'item' : 'items'"></span> left
+				</span>
+
+				<ul class="filters">
+					<li>
+						<a
+							x-on:click.prevent="filter = 'all'"
+							x-bind:class="{selected: filter=== 'all'}"
+							href="#/"
+							>All</a
+						>
+					</li>
+					<li>
+						<a
+							x-on:click.prevent="filter = 'active'"
+							x-bind:class="{selected: filter=== 'active'}"
+							href="#/active"
+							>Active</a
+						>
+					</li>
+					<li>
+						<a
+							x-on:click.prevent="filter = 'completed'"
+							x-bind:class="{selected: filter=== 'completed'}"
+							href="#/completed"
+							>Completed</a
+						>
+					</li>
+				</ul>
+
+				<button
+					x-show="completed.length"
+					x-on:click="clearCompletedTodos"
+					class="clear-completed"
+				>
+					Clear completed
+				</button>
+			</footer>
+		</section>
+		<footer class="info">
+			<p>Double-click to edit a todo</p>
+			<p>Created by <a href="https:insidejoke.tk/">Fabio Perez</a></p>
+			<p>Part of <a href="https://amiscloud.com">AmisCloud</a></p>
+		</footer>
+		<!-- Scripts here. Don't remove ↓ -->
+		<script src="node_modules/todomvc-common/base.js"></script>
+		<script src="js/app.js"></script>
+		<script src="js/todos.js"></script>
+	</body>
+</html>
